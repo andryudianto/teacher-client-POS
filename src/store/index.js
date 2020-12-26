@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import axios from 'axios';
-
 import layout from './layout';
 
 Vue.use(Vuex);
@@ -17,9 +16,10 @@ export default new Vuex.Store({
     courses: [],
     quizzes: [],
     selectedLessons: [],
-    quizCourseId: [],
+    QuizId: '',
     questions: [],
-    registrationCode: ''
+    registrationCode: '',
+    coursesByLessonId: []
   },
   mutations: {
     setTeacher (state, payload) {
@@ -45,6 +45,9 @@ export default new Vuex.Store({
     },
     setRegistrationCode (state, payload) {
       state.registrationCode = payload
+    },
+    setCoursesByLessonId (state, payload) {
+      state.coursesByLessonId = payload
     }
   },
   actions: {
@@ -74,11 +77,12 @@ export default new Vuex.Store({
       })
     },
     fetchLessons (context) {
-      const TeacherId = localStorage.getItem('teacherId')
-
       axios({
         method: 'GET',
-        url: `http://localhost:3000/lessons/${TeacherId}`
+        url: `http://localhost:3000/lessons`,
+        headers: {
+          access_token: localStorage.getItem('access_token')
+        }
       })
         .then(({ data }) => {
           context.commit('setLessons', data)
@@ -88,23 +92,24 @@ export default new Vuex.Store({
         })
     },
     addLesson (context, name) {
-      const teacherId = localStorage.getItem('teacherId')
-
       return axios({
         method: 'POST',
-        url: `http://localhost:3000/teacher/lesson/${teacherId}`,
+        url: `http://localhost:3000/lessons`,
         data: {
-          name,
-          teacherId
+          name
+        },
+        headers: {
+          access_token: localStorage.getItem('access_token')
         }
       })
     },
     fetchStudents (context) {
-      const TeacherId = localStorage.getItem('teacherId')
-
       axios({
         method: 'GET',
-        url: `http://localhost:3000/teacher/student-list/${TeacherId}`
+        url: `http://localhost:3000/students`,
+        headers: {
+          access_token: localStorage.getItem('access_token')
+        }
       })
         .then(({ data }) => {
           context.commit('setStudents', data)
@@ -113,13 +118,13 @@ export default new Vuex.Store({
           throw err.response
         })
     },
-    fetchCourses (context, payload) {
+    fetchCoursesByLessonId (context, payload) {
       axios({
         method: 'GET',
         url: `http://localhost:3000/courses/`+payload
       })
         .then(({ data }) => {
-          context.commit('setCourses', data)
+          context.commit('setCoursesByLessonId', data)
         })
         .catch(err => {
           throw err.response
@@ -130,18 +135,18 @@ export default new Vuex.Store({
 
       return axios({
         method: 'POST',
-        url: `http://localhost:3000/teacher/course`,
+        url: `http://localhost:3000/courses`,
         data: {
           name,
           materialUrl,
-          lessonId: LessonId
+          LessonId
         }
       })
     },
     fetchQuizzes (context) {
       axios({
         method: 'GET',
-        url: `http://localhost:3000/teacher/quiz/`
+        url: `http://localhost:3000/quizzes`
       })
         .then(({ data }) => {
           context.commit('setQuizzes', data)
@@ -151,13 +156,13 @@ export default new Vuex.Store({
         })
     },
     addQuiz (context, payload) {
-      const {title, CourseId } = payload
+      const {name, CourseId } = payload
 
       return axios({
         method: 'POST',
-        url: `http://localhost:3000/teacher/quiz/${CourseId}`,
+        url: `http://localhost:3000/quizzes/${CourseId}`,
         data: {
-          title
+          name
         }
       })
     },
@@ -174,15 +179,15 @@ export default new Vuex.Store({
       })
     },
     addQuestion (context, payload) {
-      const { QuizId, answer, questions, choices } = payload
+      const { QuizId, answer, question, choices } = payload
 
       return axios({
         method: 'POST',
-        url: `http://localhost:3000/teacher/question/${QuizId}`,
+        url: `http://localhost:3000/questions/${QuizId}`,
         data: {
-          questions,
+          question,
           answer,
-          choices
+          multipleChoice: choices
         }
       })
     },

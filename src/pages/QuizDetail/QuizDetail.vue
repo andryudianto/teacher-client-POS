@@ -2,7 +2,7 @@
    <div>
     <div class="d-flex align-items-center justify-content-between">
       <h1 class="page-title">
-        <span class="fw-semi-bold">{{ questions[0].Quiz.name }}</span>
+        <!-- <span class="fw-semi-bold">{{ questions[0].Quiz.name }}</span> -->
       </h1>
       <router-link to="/app/quizzes"><button type="button" class="btn btn-primary float-right">Back</button></router-link>
     </div>
@@ -49,6 +49,7 @@ export default {
     }
   }
 }
+//this.$route.params.id
 </script>
 
 <style>

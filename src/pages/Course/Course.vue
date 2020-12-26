@@ -4,7 +4,6 @@
       <h2 class="page-title">Course <span class="fw-semi-bold">Lists</span></h2>
       <button type="button" class="btn btn-primary float-right" @click.prevent="changePage">Add Course</button>
     </div>
-    <h1> {{LessonId}} </h1>
     <select class="form-control" v-model="LessonId">
       <option disabled>--- Choose Lesson Name ---</option>
       <option v-for="lesson in lessons" :key="lesson.id" v-bind:value="lesson.id">{{ lesson.name }}</option>
@@ -19,15 +18,13 @@
             <table class="table">
               <thead>
                 <tr>
-                  <th class="hidden-sm-down">#</th>
+                  <th>No</th>
                   <th>Materi</th>
-                  <th>Mata Pelajaran</th>
                   <th class="hidden-sm-down">Link Materi</th>
-                  <th class="hidden-sm-down">Quiz</th>
                 </tr>
               </thead>
               <tbody>
-                <CourseRow v-for="(course, index) in courses" :key="course.id" :course="course" :index="index" />
+                <CourseRow v-for="(course, index) in coursesByLessonId" :key="course.id" :index="index" :course="course" />
               </tbody>
             </table>
           </div>
@@ -53,8 +50,8 @@ export default {
     CourseRow 
   },
   computed: {
-    courses () {
-      return this.$store.state.courses
+    coursesByLessonId () {
+      return this.$store.state.coursesByLessonId
     },
     lessons () {
       return this.$store.state.lessons
@@ -78,7 +75,7 @@ export default {
   watch: {
     LessonId: function() {
       const { LessonId } = this
-      this.$store.dispatch('fetchCourses', LessonId)
+      this.$store.dispatch('fetchCoursesByLessonId', LessonId)
     }
   }
 };

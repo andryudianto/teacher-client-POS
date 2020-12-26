@@ -11,9 +11,6 @@
       </b-nav-item>
     </b-nav>
     <b-nav>
-      <b-nav-item>
-        invited code {{registrationCode}}
-      </b-nav-item>
       <!-- <b-form class="d-sm-down-none ml-5" inline>
         <b-form-group>
           <b-input-group class="input-group-no-border">
@@ -47,6 +44,11 @@
         <Notifications />
       </b-nav-item-dropdown> -->
       <b-nav-item-dropdown id="v-step-2" class="settingsDropdown d-sm-down-none" no-caret right>
+        <b-nav-item>
+          <b-button pill size="sm" variant="primary" 
+          v-clipboard="registrationCode"
+          >regis code</b-button>
+        </b-nav-item>
         <template slot="button-content">
           <i class="la la-cog px-2" />
         </template>
@@ -67,7 +69,6 @@
 
 <script>
 import { mapState, mapActions } from 'vuex';
-import jwt from 'jsonwebtoken';
 import Notifications from '@/components/Notifications/Notifications';
 
 export default {
@@ -112,12 +113,11 @@ export default {
       localStorage.clear()
       this.$router.push({ name: 'LoginPage' })
     },
-    
+    getRegistrationCode() {
+      this.$store.dispatch('generateCode')
+    }
   },
   created () {
-    let token = localStorage.getItem('access_token')
-    let decoded = jwt.verify(token, 'secret')
-    this.name = decoded.name
     this.$store.dispatch('generateCode')
   }
 };

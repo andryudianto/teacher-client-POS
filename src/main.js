@@ -13,7 +13,9 @@ import router from './Routes';
 import App from './App';
 import layoutMixin from './mixins/layout';
 import Widget from './components/Widget/Widget';
-
+import Clipboard from 'v-clipboard'
+ 
+Vue.use(Clipboard)
 Vue.use(BootstrapVue);
 Vue.use(VueTouch);
 Vue.use(Trend);

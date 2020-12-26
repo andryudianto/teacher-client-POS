@@ -18,7 +18,7 @@
             <label for="CourseId">Course Name</label>
             <select class="form-control" v-model="CourseId">
               <option disabled>--- Choose Lesson Name ---</option>
-              <option v-for="course in courses" :key="course.id" v-bind:value="course.id">{{ course.name }}</option>
+              <option v-for="course in coursesByLessonId" :key="course.id" v-bind:value="course.id">{{ course.name }}</option>
             </select>
           </div>
           <button type="submit" class="btn btn-block btn-primary">Add Quiz</button>
@@ -62,7 +62,6 @@ export default {
       name: '',
       CourseId: '',
       LessonId: '',
-      QuizId: '',
       question: '',
       choices: '',
       answer: '',
@@ -71,41 +70,41 @@ export default {
     }
   },
   computed: {
-    courses () {
-      return this.$store.state.courses
+    coursesByLessonId () {
+      return this.$store.state.coursesByLessonId
     },
     lessons () {
       return this.$store.state.lessons
     },
     quizCourseId () {
       return this.$store.state.quizCourseId
+    },
+    QuizId() {
+      return this.$store.state.QuizId
     }
   },
   watch: {
     LessonId: function() {
       const { LessonId } = this
-      this.$store.dispatch('fetchCourses', LessonId)
+      this.$store.dispatch('fetchCoursesByLessonId', LessonId)
     },
     isAddQuizDone: function() {
       const { CourseId } = this
       this.$store.dispatch('getQuiz', CourseId)
     },
-    quizCourseId: function() {
-      const found = this.quizCourseId.find(el => el.title === this.name)
-      this.QuizId = found.id
-    }
   },
   methods: {
     addQuiz () {
       const { name, CourseId } = this
       const payload = { 
-        title: name, 
+        name, 
         CourseId 
       }
 
       this.$store.dispatch('addQuiz', payload)
-        .then(() => {
+        .then(({data}) => {
           this.isAddQuizDone = true
+          this.$store.state.QuizId = data.id
         })
         .catch(err => {
           throw err.response
@@ -117,7 +116,7 @@ export default {
       const payload = { 
         QuizId, 
         answer, 
-        questions: question,
+        question,
         choices
       }
 
@@ -144,6 +143,9 @@ export default {
       next({ name: 'LoginPage' })
     }
   },
+  created () {
+    this.$store.dispatch('fetchLessons')
+  }
 }
 </script>
 

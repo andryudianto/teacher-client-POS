@@ -11,7 +11,7 @@ import CourseList from './CourseList/CourseList';
 export default {
   name: 'LessonCard',
   components: { CourseList },
-  props: ['lesson']
+  props: ['lesson'],
 }
 </script>
 

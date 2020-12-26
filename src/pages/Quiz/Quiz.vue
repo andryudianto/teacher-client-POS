@@ -16,14 +16,14 @@
             <table class="table">
               <thead>
                 <tr>
-                  <th class="hidden-sm-down">#</th>
-                  <th>Nama Quiz</th>
+                  <th class="hidden-sm-down">No</th>
+                  <th>Nama</th>
                   <th>Materi</th>
                   <th>Lihat Quiz</th>
                 </tr>
               </thead>
               <tbody>
-                <QuizRow v-for="quiz in quizzes" :key="quiz.id" :quiz="quiz" />
+                <QuizRow v-for="(quiz, index) in quizzes" :key="quiz.id" :index="index" :quiz="quiz" />
               </tbody>
             </table>
           </div>

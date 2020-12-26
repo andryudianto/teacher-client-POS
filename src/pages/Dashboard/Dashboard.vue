@@ -11,10 +11,10 @@
               <table class="table table-striped table-lg mb-0 requests-table">
                 <thead>
                   <tr class="text-muted">
-                    <th>NAME</th>
-                    <th>EMAIL</th>
-                    <th>BIRTH DATE</th>
-                    <th>ADDRESS</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Birth Date</th>
+                    <th>Address</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -31,7 +31,6 @@
 <script>
 import Widget from '@/components/Widget/Widget';
 import StudentTable from '@/components/StudentTable/StudentTable';
-import jwt from 'jsonwebtoken';
 
 import { Chart } from 'highcharts-vue';
 
@@ -58,11 +57,6 @@ export default {
     }
   },
   created () {
-    let token = localStorage.getItem('access_token')
-    let decoded = jwt.verify(token, 'secret')
-    this.teacherId = decoded.id
-    localStorage.setItem('teacherId', decoded.id)
-    localStorage.setItem('teacherName', decoded.name)
     this.$store.dispatch('fetchStudents')
   }
 };
